@@ -2,7 +2,9 @@ require 'jarvis/generator/plan/plan_generator'
 
 module Generator
   module Plan
+    # top class
     class PlanList
+
       attr_accessor :plan_list
 
       def initialize(plans)
