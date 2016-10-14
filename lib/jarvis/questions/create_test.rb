@@ -4,6 +4,7 @@ require 'jarvis/generator/multi/multi_generator'
 require 'inquirer'
 
 module Questions
+  # top class
   class CreateTest < Thor::Group
 
     def type
