@@ -15,3 +15,11 @@ Style/EmptyLinesAroundModuleBody:
     - empty_lines
     - empty_lines_except_namespace
     - no_empty_lines
+
+Style/WordArray:
+  EnforcedStyle: brackets
+  SupportedStyles:
+    # percent style: %w(word1 word2)
+    - percent
+    # bracket style: ['word1', 'word2']
+    - brackets
