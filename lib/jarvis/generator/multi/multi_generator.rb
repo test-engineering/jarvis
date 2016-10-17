@@ -11,7 +11,7 @@ module Generator
 
       def initialize(file_name)
         @config = YAML.load_file("#{ENV['HOME']}/.jarvis/multi/#{file_name}.yml")
-        @plans = Generator::Plan::PlanList.new(@config['plans'])
+        @plans = Generator::Plan::PlanList.new(@config['plans'].keys)
         @body = {'name' => @config['name'], 'projectId' => @config['projectId'], 'items' => []}
       end
 
@@ -26,7 +26,11 @@ module Generator
 
       def generate_items
         @plans.names.each do |plan_name|
-          self.add_item(plan_name)
+          if @config['plans'][plan_name]['copies']
+            self.add_item(plan_name, @config['plans'][plan_name]['copies'])
+          else
+            self.add_item(plan_name)
+          end
         end
       end
 
