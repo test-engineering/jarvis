@@ -1,3 +1,7 @@
+Style/RedundantReturn:
+  # When true allows code like `return x, y`.
+  AllowMultipleReturnValues: true 
+
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 50
