@@ -7,7 +7,7 @@ module Manager
       list = `( ls #{ENV['HOME']}/.jarvis/#{path} )`
       list = list.split("\n")
       list.each do |item|
-        item = item.slice! '.yml'
+        item.slice! '.yml'
       end
     end
 

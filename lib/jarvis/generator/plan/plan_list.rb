@@ -15,7 +15,7 @@ module Generator
       end
 
       def create_on_blaze
-        @plan_list.each do |name, plan|
+        @plan_list.each do |_name, plan|
           plan.create_on_blaze
         end
       end
