@@ -1,7 +1,7 @@
 # coding: utf-8
 
 lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |gem|
   gem.name        = 'jarvis'
@@ -9,7 +9,11 @@ Gem::Specification.new do |gem|
   gem.date        = '2016-09-05'
   gem.summary     = 'Jarvis'
   gem.description = 'Blaze Meter create plan helper!'
-  gem.authors     = ['Cassio Kenji','Evandro Matioli','Karoline Leite','Luis Felipe P. Benassi','Luiz Perreira']
+  gem.authors     = ['Cassio Kenji',
+                     'Evandro Matioli',
+                     'Karoline Leite',
+                     'Luis Felipe P. Benassi',
+                     'Luiz Perreira']
 
   gem.files       = `git ls-files`.split("\n")
   gem.executables   = ['jarvis']
