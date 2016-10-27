@@ -53,10 +53,12 @@ class Blaze
   end
 
   def get_plans_from_project(project_id)
-    response = self.class.get("/tests?limit=20&project_id=#{project_id}", headers: { 'Content-Type' => 'application/json' })
+    response = self.class.get("/tests?limit=20&project_id=#{project_id}",
+                              headers: { 'Content-Type' => 'application/json' })
     plans_info = {}
     response['result'].each do |plan|
-      plans_info[plan['name']] = { 'id' => plan['id'], 'duration' => plan['configuration']['plugins']['jmeter']['override']['duration'] }
+      plans_info[plan['name']] = { 'id' => plan['id'],
+                                   'duration' => plan['configuration']['plugins']['jmeter']['override']['duration'] }
     end
     plans_info
   end
@@ -70,40 +72,6 @@ class Blaze
     self.class.get("/masters/#{test_id}/status", options)
   end
 
-  def get_test_metrics(test_id)
-    metrics = {}
-
-    options = { headers: { 'Content-Type' => 'application/json' } }
-    test_status = nil
-    test_metrics = nil
-
-    5.times do
-      test_status = get_test_status(test_id)
-      test_metrics = self.class.get("/masters/#{test_id}/reports/default/summary?label=ALL", options)
-      break if !test_status.nil? && !test_metrics.nil?
-      sleep 0.5
-    end
-
-    duration = test_metrics['result']['summary'][0]['duration'] < 1 ? 1 : test_metrics['result']['summary'][0]['duration']
-
-    metrics['started_time'] = test_metrics['result']['summary'][0]['first']
-    metrics['duration'] = test_metrics['result']['summary'][0]['duration']
-    metrics['last_update'] = test_metrics['result']['summary'][0]['last']
-    metrics['max_users'] = test_metrics['result']['maxUsers'].to_s
-    metrics['tps'] = test_metrics['result']['summary'][0]['hits'] / duration.to_f
-    metrics['errors_rate'] = test_metrics['result']['summary'][0]['failed'].to_f / test_metrics['result']['summary'][0]['hits'] * 100
-    metrics['tp90'] = test_metrics['result']['summary'][0]['tp90']
-    metrics['test_status'] = test_status['result']['status']
-
-    metrics
-  end
-
-  def share_plan(plan_id)
-    options = { headers: { 'Content-Type' => 'application/json' } }
-    response = self.class.post("/masters/#{plan_id}/publicToken", options)
-    response['result']['publicToken'] if response['error'].nil?
-  end
-
   def list_projects
     options = { headers: { 'Content-Type' => 'application/json' } }
     response = self.class.get('/user/projects?&limit=25', options)
@@ -112,18 +80,6 @@ class Blaze
       projects[plan['name']] = plan['id']
     end
     projects
-  end
-
-  def get_aggregate_report(test_id)
-    options = { headers: { 'Content-Type' => 'application/json' } }
-    response = nil
-
-    5.times do
-      response = self.class.get("/masters/#{test_id}/reports/aggregatereport/data", options)
-      break if response != nil
-      sleep 0.5
-    end
-    response
   end
 
   def list_reports
@@ -138,24 +94,6 @@ class Blaze
     reports
   end
 
-  def get_plans_from_multi(multi_id)
-    options = { headers: { 'Content-Type' => 'application/json' } }
-    response = self.class.get("/collections/#{multi_id}/masters", options)['result'].last['sessions']
-    sessions = { 'checkout' => [], 'webstore' => [], 'search' => [], 'app' => [], 'cadastro' => [], 'selfhelp' => [], 'wishlist' => [] }
-
-    response.each do |s|
-      sessions['checkout'] << s['id'] if s['name'].downcase.include? 'checkout'
-      sessions['webstore'] << s['id'] if s['name'].downcase.include? 'webstore'
-      sessions['search'] << s['id'] if s['name'].downcase.include? 'search'
-      sessions['cadastro'] << s['id'] if s['name'].downcase.include? 'cadastro'
-      sessions['app'] << s['id'] if s['name'].downcase.include? 'mobile'
-      sessions['selfhelp'] << s['id'] if s['name'].downcase.include? 'self'
-      sessions['wishlist'] << s['id'] if s['name'].downcase.include? 'wish'
-    end
-
-    sessions
-  end
-
   def terminate(plan_id)
     options = { headers: { 'Content-Type' => 'application/json' } }
     self.class.post("/tests/#{plan_id}/terminate", options)
@@ -168,46 +106,6 @@ class Blaze
 
   def get_individual_aggregate(session_id)
     self.class.get("/sessions/#{session_id}/reports/aggregatereport/data")
-  end
-
-  def mult_aggregate(multi_id)
-    aggregate = { 'id' => multi_id, 'labels' => {} }
-    sessions = get_plans_from_multi(multi_id)
-
-    sessions.each do |product_sessions|
-      aggregate['labels'][product_sessions[0]] = {}
-      product_sessions[1].each do |s|
-        labels = get_individual_aggregate s
-        labels['result'].each do |label|
-          if aggregate['labels'][product_sessions[0]].key?(label['labelName'])
-            aggregate['labels'][product_sessions[0]][label['labelName']]['samples'] = aggregate['labels'][product_sessions[0]][label['labelName']]['samples'] + label['samples']
-            aggregate['labels'][product_sessions[0]][label['labelName']]['errorsCount'] = aggregate['labels'][product_sessions[0]][label['labelName']]['errorsCount'] + label['errorsCount']
-            aggregate['labels'][product_sessions[0]][label['labelName']]['duration'] = label['duration'] if aggregate['labels'][product_sessions[0]][label['labelName']]['duration'] < label['duration']
-            aggregate['labels'][product_sessions[0]][label['labelName']]['95line'] =+ label['95line'] if aggregate['labels'][product_sessions[0]][label['labelName']]['95line'] < label['95line']
-          else
-            aggregate['labels'][product_sessions[0]][label['labelName']] = {}
-            aggregate['labels'][product_sessions[0]][label['labelName']]['samples'] = label['samples']
-            aggregate['labels'][product_sessions[0]][label['labelName']]['errorsCount'] = label['errorsCount']
-            aggregate['labels'][product_sessions[0]][label['labelName']]['duration'] = label['duration']
-            aggregate['labels'][product_sessions[0]][label['labelName']]['95line'] =+ label['95line']
-          end
-        end
-      end
-    end
-    generate_kpi_metrics aggregate
-  end
-
-  def generate_kpi_metrics(aggregate)
-    aggregate['labels'].each do |_key, value|
-      value.each do |_k, v|
-        if v['errorsCount'] > 0
-          v['errorsRate'] = '%.2f' % ((v['errorsCount'].to_f * 100) / v['samples'])
-        else v['errorsRate'] = 0
-        end
-        v['avgThroughput'] = '%.2f' % (v['samples'].to_f / v['duration'] * 60)
-      end
-    end
-    aggregate
   end
 
 end

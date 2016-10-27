@@ -1,10 +1,13 @@
 Style/RedundantReturn:
   # When true allows code like `return x, y`.
-  AllowMultipleReturnValues: true 
+  AllowMultipleReturnValues: true
 
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 50
+
+Metrics/LineLength:
+  Max: 120
 
 Style/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines
