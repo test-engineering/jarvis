@@ -13,6 +13,7 @@ module Generator
       def initialize(file_name)
         @config = YAML.load_file("#{ENV['HOME']}/.jarvis/multi/#{file_name}.yml")
         @plans = Generator::Plan::PlanList.new(@config['plans'].keys)
+        plan_cloner
         @body = { 'name' => @config['name'], 'projectId' => @config['projectId'], 'items' => [] }
       end
 
@@ -22,7 +23,8 @@ module Generator
         set_rampup_duration(@config['rampup'], @config['duration'])
         puts @body['name'].to_s.colorize(:light_blue)
         response = Blaze.new.create_mult_test(@body.to_json)
-        puts "https://a.blazemeter.com/app/#projects/#{response['result']['projectId']}/collections/#{response['result']['id']}".colorize(:light_blue).underline
+        puts "https://a.blazemeter.com/app/#projects/#{response['result']['projectId']}/
+              collections/#{response['result']['id']}".colorize(:light_blue).underline
       end
 
       def generate_items
@@ -37,10 +39,14 @@ module Generator
 
       def add_item(plan_name, qtd = 1)
         qtd.times do
-          @body['items'] << { 'testId' => @plans.plan_list[plan_name].plan_id,
-                              'location' => @plans.plan_list[plan_name].location,
-                              'override' => { 'rampup' => @plans.plan_list[plan_name].rampup,
-                                              'duration' => @plans.plan_list[plan_name].duration } }
+          @body['items'] << {
+            'testId' => @plans.plan_list[plan_name].plan_id,
+            'location' => @plans.plan_list[plan_name].location,
+            'override' => {
+              'rampup' => @plans.plan_list[plan_name].rampup,
+              'duration' => @plans.plan_list[plan_name].duration
+            }
+          }
         end
       end
 
@@ -49,6 +55,18 @@ module Generator
         @body['items'].each do |item|
           item['override']['rampup'] = rampup * 60
           item['override']['duration'] = duration
+        end
+      end
+
+      def plan_cloner
+        @plans.names.each do |plan_name|
+          next unless @config['plans'][plan_name]['clone']
+          qtd = @config['plans'][plan_name]['clone']['quantity']
+          Manager::Files.new.create_tmp_dirs(qtd)
+          @config['plans'][plan_name]['clone']['files'].each do |file|
+            file_path = @plans.plan_list[plan_name].file['files'][file]
+            Manager::Files.new.split_file(plan_name, file_path, qtd)
+          end
         end
       end
 
