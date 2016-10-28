@@ -3,6 +3,7 @@ require 'blazemeter/blazemeter'
 
 module Generator
   module Plan
+    # top-class
     class PlanGenerator
 
       attr_accessor :file
