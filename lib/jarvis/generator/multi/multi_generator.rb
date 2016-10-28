@@ -3,6 +3,7 @@ require 'blazemeter/blazemeter'
 
 module Generator
   module Multi
+    # top-class
     class MultiGenerator
 
       attr_accessor :plans
