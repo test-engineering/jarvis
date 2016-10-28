@@ -62,7 +62,7 @@ module Generator
         @plans.names.each do |plan_name|
           next unless @config['plans'][plan_name]['clone']
           qtd = @config['plans'][plan_name]['clone']['quantity']
-          Manager::Files.new.create_tmp_dirs(qtd)
+          Manager::Files.new.create_tmp_dirs(plan_name, qtd)
           @config['plans'][plan_name]['clone']['files'].each do |file|
             file_path = @plans.plan_list[plan_name].file['files'][file]
             Manager::Files.new.split_file(plan_name, file_path, qtd)

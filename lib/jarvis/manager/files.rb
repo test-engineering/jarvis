@@ -14,7 +14,7 @@ module Manager
       end
     end
 
-    def create_tmp_dirs(qtd, plan_name)
+    def create_tmp_dirs(plan_name, qtd)
       qtd.times do |i|
         `( mkdir -p  #{source_path}/tmp/#{plan_name}#{i + 1})`
       end
@@ -41,8 +41,8 @@ module Manager
         end
       rescue RangeError => msg
         puts msg
-      ensure
         delete_tmp
+        exit!
       end
     end
 
