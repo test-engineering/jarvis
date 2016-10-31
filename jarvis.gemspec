@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
                      'Evandro Matioli',
                      'Karoline Leite',
                      'Luis Felipe P. Benassi',
-                     'Luiz Perreira']
+                     'Luiz Pereira']
 
   gem.files       = `git ls-files`.split("\n")
   gem.executables   = ['jarvis']
