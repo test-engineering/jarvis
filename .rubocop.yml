@@ -9,6 +9,9 @@ Metrics/MethodLength:
 Metrics/LineLength:
   Max: 120
 
+Metrics/AbcSize:
+  Max: 30
+
 Style/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines
   SupportedStyles:

@@ -3,6 +3,7 @@ require 'httmultiparty'
 require 'colorize'
 require 'retriable'
 
+# Class that make all the communication with Blazemeter APIs
 class Blaze
 
   include HTTParty

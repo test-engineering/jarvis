@@ -1,5 +1,6 @@
 require 'colorize'
 
+# Helps to print and clean terminal
 class Printer
 
   def initialize
@@ -12,9 +13,17 @@ class Printer
     @@instance
   end
 
-  def carriage_return;  "\r"    end
-  def line_up;          "\e[A"  end
-  def clear_line;       "\e[0K" end
+  def carriage_return
+    "\r"
+  end
+
+  def line_up
+    "\e[A"
+  end
+
+  def clear_line
+    "\e[0K"
+  end
 
   def clear
     # jump back to the first position and clear the line
