@@ -40,6 +40,16 @@ module Generator
         @file['plan']['configuration']['plugins']['jmeter']['override']['duration']
       end
 
+      def name(value = nil)
+        @file['plan']['name'] = value if value
+        @file['plan']['name']
+      end
+
+      def file_path(key, value = nil)
+        @file['file'][key] = value if value
+        @file['plan'][key]
+      end
+
     end
   end
 end
