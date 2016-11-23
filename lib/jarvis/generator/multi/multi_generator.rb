@@ -1,5 +1,6 @@
 require 'jarvis/generator/plan/plan_list'
 require 'blazemeter/blazemeter'
+require 'pry'
 
 module Generator
   module Multi
@@ -63,6 +64,9 @@ module Generator
         @plans.names.each do |plan_name|
           next unless @config['plans'][plan_name]['clone']
           qtd = @config['plans'][plan_name]['clone']['quantity']
+
+          @plans.plan_clone(plan_name, qtd, @config['plans'][plan_name]['clone']['files'])
+
           Manager::Files.new.create_tmp_dirs(plan_name, qtd)
           @config['plans'][plan_name]['clone']['files'].each do |file|
             file_path = @plans.plan_list[plan_name].file['files'][file]

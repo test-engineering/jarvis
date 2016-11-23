@@ -24,6 +24,25 @@ module Generator
         @plan_list.keys
       end
 
+      def plan_clone(plan_name, qtd, files)
+        name = plan_list[plan_name].name
+        plan_list[plan_name].name("#{name} 1")
+        files.each do |file|
+          file_name = plan_list[plan_name].file_path(file).split("/").last
+          plan_list[plan_name].file_path(file, "~/.jarvis/tmp/#{plan_name}1/#{file_name}")
+        end
+
+        for i in 2..qtd
+          plan_list[plan_name+"#{i}"] = Generator::Plan::PlanGenerator.new(plan_name)
+
+          plan_list[plan_name+"#{i}"].name(name + " #{i}")
+          files.each do |file|
+            file_name = plan_list[plan_name+"#{i}"].file_path(file).split("/").last
+            plan_list[plan_name+"#{i}"].file_path(file, "~/.jarvis/tmp/#{plan_name}#{i}/#{file_name}")
+          end
+        end
+      end
+
     end
   end
 end
