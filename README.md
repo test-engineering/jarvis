@@ -12,11 +12,11 @@ Plus, Jarvis provide 2 great *workaround* features:
 
 ## Table of Contents
 * [Features](#features)
-    * [1. Test plan configuration](#1.-test-plan-configuration)
-    * [2. Multi test configuration](#2.-multi-test-configuration)
-* [Plus: Workaround Features](#plus:-testing-features)
-    * [1. Engine per console configuration](#1.-engine-per-console-configuration)
-    * [2. Split CSV to specifc file](#2.-split-csv-to-specifc-file)
+    * [1. Test plan configuration](#1-test-plan-configuration)
+    * [2. Multi test configuration](#2-multi-test-configuration)
+* [Plus: Workaround Features](#plus-workaround-features)
+    * [1. Engine per console configuration](#1-engine-per-console-configuration)
+    * [2. Split CSV to specifc file](#2-split-csv-to-specifc-file)
 * [Usage](#usage)
 * [TO DOS](#to-dos)
 
