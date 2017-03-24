@@ -68,9 +68,13 @@ Blazemeter offers a feature that splits all data files inside a test plan to eac
 
 #### Contextualizing the problem
 
-In another complex test scenario, we have 20 data files for one test script. Just 2 of this files needs to be splitted. We need 10 slaves to reproduce the desired load. There is no way to do that on Blazemeter without splitting manually and create each one of this desired slaves!
+In another complex test scenario, we have 20 data files for one test script. Just 2 of this files needs to be splitted. We need 10 slaves to reproduce the desired load. There is no way to do that configuration on Blazemeter. So the resolution was to split manually each file and create each one of this desired slaves separately.
 
 Looks this way with Blazemeter resources:
+
+![Blazemeter configuration splitting csv manually](imgs/split_csv_blazemeter_default.png)
+
+The image is a reduced version of the scenario. But the idea is here: for a unique test plan, because of the necessity of split some specific files, was necessary to configure each *engine* as a unique *test plan*, increasing time spent and risks of human mistakes.
 
 ## Usage
 
