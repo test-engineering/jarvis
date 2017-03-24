@@ -29,8 +29,11 @@ module Manager
       file_name = file_path.split('/').last
       # npf = number per file
       npf = (csv.length / qtd).to_i
-      raise(RangeError, "Number of lines on file #{file_path} are less than split quantity...
-                        Please put more data to the file!") if npf.zero?
+      if npf.zero?
+        raise(RangeError, "Number of lines on file #{file_path} are less than split quantity...
+                          \nPlease put more data to the file!")
+      end
+
       qtd.times do |i|
         File.open("#{source_path}/tmp/#{plan_name}#{i + 1}/#{file_name}", 'w') do |f|
           aux = csv[(i * npf)..(((i + 1) * npf) - 1)].map(&:to_csv)

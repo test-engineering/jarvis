@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.version     = '0.0.1'
   gem.date        = '2016-09-05'
   gem.summary     = 'Jarvis'
-  gem.description = 'Blaze Meter create plan helper!'
+  gem.description = 'BlazeMeter test helper!'
   gem.authors     = ['Cassio Kenji',
                      'Evandro Matioli',
                      'Karoline Leite',
